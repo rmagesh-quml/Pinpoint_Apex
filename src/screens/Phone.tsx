@@ -1,4 +1,4 @@
-import { useMemo, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { ANSWERS, FALLBACK_ANSWER, answerFor, type Answer } from '../core/answers';
 import { confirmSuggestion, startEvents, stepEvents } from '../core/engine';
 import type { PinEvent } from '../core/events';
@@ -14,7 +14,8 @@ import { SourceTag } from '../components/SourceTag';
 import { useIncident } from '../lib/incidentStore';
 import { resetNetworkCounter } from '../lib/netcount';
 import { speakLocal, stopSpeaking } from '../lib/speak';
-import { getSpeechEngine, subscribeSpeechEngine } from '../lib/speech';
+import { getSpeechEngine, setSpeechEngine, subscribeSpeechEngine } from '../lib/speech';
+import { loadWhisper, voicePreferred, whisperEngine } from '../lib/whisper';
 import { clock, elapsed, useNow } from '../lib/time';
 
 /** Quick phrases: tapped stand-ins for speech, run through the same extractor. */
@@ -30,6 +31,33 @@ const QUICK_PHRASES = [
 ];
 
 type View = 'steps' | 'review' | 'handoff';
+type VoiceState = 'off' | 'loading' | 'ready' | 'failed';
+
+/** Loads on-device voice at app open (before any incident) if it was turned on in /spike. */
+function useVoice(): VoiceState {
+  const [state, setState] = useState<VoiceState>(() => (getSpeechEngine() ? 'ready' : voicePreferred() ? 'loading' : 'off'));
+  useEffect(() => {
+    if (state !== 'loading') return;
+    let live = true;
+    loadWhisper()
+      .then(() => {
+        setSpeechEngine(whisperEngine());
+        if (live) setState('ready');
+      })
+      .catch(() => live && setState('failed'));
+    return () => {
+      live = false;
+    };
+  }, [state]);
+  return state;
+}
+
+const VOICE_LABEL: Record<VoiceState, string> = {
+  off: 'Voice: tap and quick phrases',
+  loading: 'Voice: loading on-device model…',
+  ready: 'Voice: on this device',
+  failed: 'Voice unavailable: using taps and quick phrases',
+};
 type Sheet = null | 'say' | 'ask' | { pick: FieldKey | null; edit?: boolean };
 
 export function Phone() {
@@ -39,6 +67,7 @@ export function Phone() {
   const record = useMemo(() => buildRecord(events), [events]);
   const step = currentStep(events);
   const started = events.some((e) => e.k === 'start');
+  const voice = useVoice();
 
   const newDemo = () => {
     stopSpeaking();
@@ -50,6 +79,7 @@ export function Phone() {
   if (!started) {
     return (
       <StartScreen
+        voice={voice}
         onStart={(loc) => {
           resetNetworkCounter();
           append(startEvents(loc));
@@ -120,7 +150,7 @@ export function Phone() {
   );
 }
 
-function StartScreen({ onStart }: { onStart: (loc: string) => void }) {
+function StartScreen({ voice, onStart }: { voice: VoiceState; onStart: (loc: string) => void }) {
   const [loc, setLoc] = useState(LOCATIONS[0].id);
   return (
     <div className="phone start">
@@ -140,7 +170,9 @@ function StartScreen({ onStart }: { onStart: (loc: string) => void }) {
       <button className="btn primary huge" onClick={() => onStart(loc)}>
         Start · {PROTOCOL_NAME}
       </button>
-      <p className="protocol-label">{PROTOCOL_LABEL}</p>
+      <p className="protocol-label">
+        {PROTOCOL_LABEL} · <span className="muted">{VOICE_LABEL[voice]}</span>
+      </p>
       <DemoLabel inline />
     </div>
   );

@@ -3,6 +3,7 @@ import { DemoLabel } from './components/DemoLabel';
 import { MedicMonitor } from './screens/MedicMonitor';
 import { Phone } from './screens/Phone';
 import { ReportMonitor } from './screens/ReportMonitor';
+import { Spike } from './screens/Spike';
 
 function Home() {
   return (
@@ -13,6 +14,7 @@ function Home() {
         <Link to="/phone">/phone · field app</Link>
         <Link to="/monitor/medic">/monitor/medic · Offline Medic AI</Link>
         <Link to="/monitor/report">/monitor/report · Reporting</Link>
+        <Link to="/spike">/spike · speech engine test (S25)</Link>
       </nav>
       <DemoLabel />
     </main>
@@ -26,6 +28,7 @@ export function App() {
       <Route path="/phone" element={<Phone />} />
       <Route path="/monitor/medic" element={<MedicMonitor />} />
       <Route path="/monitor/report" element={<ReportMonitor />} />
+      <Route path="/spike" element={<Spike />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

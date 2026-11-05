@@ -30,7 +30,17 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest,wasm,mjs}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest}'],
+        // The speech runtime (~22 MB) is only for the phone. It is cached on
+        // first use (the speech spike / setup step), not pushed to the monitors.
+        globIgnores: ['ort/**'],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/ort/'),
+            handler: 'CacheFirst',
+            options: { cacheName: 'pinpoint-ort', expiration: { maxEntries: 8 } },
+          },
+        ],
         maximumFileSizeToCacheInBytes: 30 * 1024 * 1024,
         navigateFallback: '/index.html',
         cleanupOutdatedCaches: true,
@@ -41,8 +51,8 @@ export default defineConfig({
   ],
   build: {
     target: 'es2022',
-    // One bundle for the app code: no on-demand chunk loads mid-incident.
-    rollupOptions: { output: { inlineDynamicImports: true } },
+    // The app is one bundle. The only separate chunk is the optional speech
+    // engine, which is precached and loaded at app open, before an incident.
   },
   test: {
     environment: 'node',

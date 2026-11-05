@@ -232,3 +232,9 @@ button { font: inherit; color: inherit; }
 @keyframes slide-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes slide-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+
+/* ---------- Speech spike ---------- */
+.spike { padding: 16px; display: grid; gap: 12px; max-width: 640px; margin: 0 auto; }
+.spike h1 { margin: 0; }
+.small { font-size: 13px; }
+.spike-report { white-space: pre-wrap; font-size: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin: 0; }

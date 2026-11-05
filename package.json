@@ -10,9 +10,12 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "offline-check": "node scripts/offline-check.cjs",
-    "phone-run": "node scripts/phone-run.cjs"
+    "phone-run": "node scripts/phone-run.cjs",
+    "prebuild": "node scripts/copy-ort.cjs",
+    "predev": "node scripts/copy-ort.cjs"
   },
   "dependencies": {
+    "@huggingface/transformers": "^3.8.1",
     "fflate": "^0.8.3",
     "jsqr": "^1.4.0",
     "qrcode": "^1.5.4",
