@@ -17,7 +17,7 @@ export const PANDAPAS_SCRIPT: ScriptAction[] = [
   { at: 10, kind: 'step', step: 'help', out: 'done' },
   { at: 16, kind: 'step', step: 'pressure', out: 'still' },
   { at: 22, kind: 'step', step: 'pack', out: 'packed' },
-  { at: 28, kind: 'say', text: "Tourniquet is on, high on the thigh, above the cut.", confirm: ['tourniquet'] },
+  { at: 28, kind: 'say', text: 'Tourniquet is on, two inches above the wound.', confirm: ['tourniquet'] },
   { at: 31, kind: 'step', step: 'tq', out: 'done' },
   { at: 36, kind: 'step', step: 'tighten', out: 'done' },
   { at: 40, kind: 'step', step: 'time', out: 'done' },

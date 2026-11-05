@@ -12,7 +12,8 @@
     "offline-check": "node scripts/offline-check.cjs",
     "phone-run": "node scripts/phone-run.cjs",
     "prebuild": "node scripts/copy-ort.cjs",
-    "predev": "node scripts/copy-ort.cjs"
+    "predev": "node scripts/copy-ort.cjs",
+    "monitor-shots": "node scripts/monitor-shots.cjs"
   },
   "dependencies": {
     "@huggingface/transformers": "^3.8.1",
