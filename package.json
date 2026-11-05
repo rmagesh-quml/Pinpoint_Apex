@@ -13,7 +13,8 @@
     "phone-run": "node scripts/phone-run.cjs",
     "prebuild": "node scripts/copy-ort.cjs",
     "predev": "node scripts/copy-ort.cjs",
-    "monitor-shots": "node scripts/monitor-shots.cjs"
+    "monitor-shots": "node scripts/monitor-shots.cjs",
+    "report-scan": "node scripts/report-scan.cjs"
   },
   "dependencies": {
     "@huggingface/transformers": "^3.8.1",

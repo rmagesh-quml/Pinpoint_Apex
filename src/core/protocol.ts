@@ -97,18 +97,20 @@ export function nextStepId(stepId: string, outcome: string): string | 'end' {
   return next ? next.id : 'end';
 }
 
-export type Location = { id: string; label: string; scenario: string };
+export type Location = { id: string; label: string; incident: string; scenario: string };
 
 export const LOCATIONS: Location[] = [
   {
     id: 'pp',
     label: 'Pandapas Pond, Brush Mountain trails',
+    incident: 'Mountain biker crash',
     scenario:
       'Mountain biker crash on the Brush Mountain trails near Pandapas Pond, Jefferson National Forest, about 15 minutes from campus. No cell signal on the trail. Deep cut to the left thigh with heavy bleeding.',
   },
   {
     id: 'cs',
     label: 'Cascades trail, Giles County',
+    incident: 'Hiker fall',
     scenario: 'Hiker fall on the Cascades trail, Giles County.',
   },
 ];
