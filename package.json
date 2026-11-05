@@ -14,7 +14,9 @@
     "prebuild": "node scripts/copy-ort.cjs",
     "predev": "node scripts/copy-ort.cjs",
     "monitor-shots": "node scripts/monitor-shots.cjs",
-    "report-scan": "node scripts/report-scan.cjs"
+    "report-scan": "node scripts/report-scan.cjs",
+    "postbuild": "node scripts/postbuild.cjs",
+    "rehearse": "bash scripts/rehearse.sh"
   },
   "dependencies": {
     "@huggingface/transformers": "^3.8.1",
