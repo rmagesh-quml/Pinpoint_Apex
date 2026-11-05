@@ -90,6 +90,8 @@ export function nextStepId(stepId: string, outcome: string): string | 'end' {
   if (!step) return 'end';
   const opt = step.options?.find((o) => o.id === outcome);
   if (opt?.next) return opt.next;
+  // 'Not sure' on a step with answer buttons follows the first answer's path.
+  if (step.options?.[0]?.next) return step.options[0].next;
   // 'done' / 'unsure' on a plain step: go to the following step in order.
   const next = STEPS[STEP_INDEX[stepId] + 1];
   return next ? next.id : 'end';

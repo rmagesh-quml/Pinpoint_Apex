@@ -9,7 +9,8 @@
     "preview": "vite preview --host --port 4173",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "offline-check": "node scripts/offline-check.cjs"
+    "offline-check": "node scripts/offline-check.cjs",
+    "phone-run": "node scripts/phone-run.cjs"
   },
   "dependencies": {
     "fflate": "^0.8.3",
@@ -24,6 +25,7 @@
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.7.0",
+    "pngjs": "^7.0.0",
     "typescript": "^5.9.3",
     "vite": "^5.4.21",
     "vite-plugin-pwa": "^2.0.0",

@@ -100,3 +100,28 @@ describe('QR encode/decode', () => {
     expect(() => decodeRecord('https://example.com')).toThrow();
   });
 });
+
+describe('engine', async () => {
+  const { startEvents, stepEvents } = await import('./engine');
+  it('records the tourniquet from the Done tap and ends after the last step', () => {
+    let ev = startEvents('pp', 1000_000);
+    const go = (step: string, out: string, t: number) => (ev = [...ev, ...stepEvents(ev, step, out, t)]);
+    go('help', 'done', 1001_000);
+    go('pressure', 'unsure', 1002_000);
+    expect(currentStep(ev)).toBe('pack');
+    go('pack', 'not-trained', 1003_000);
+    go('tq', 'done', 1004_000);
+    const r = buildRecord(ev);
+    expect(r.fields.tourniquet).toMatchObject({ value: 'Applied', via: 'step' });
+    expect(r.tqAt).toBe(1004_000);
+    go('tighten', 'done', 1005_000);
+    go('time', 'done', 1006_000);
+    go('leave', 'unsure', 1007_000);
+    expect(currentStep(ev)).toBe('end');
+    expect(buildRecord(ev).endedAt).toBe(1007_000);
+  });
+  it('ignores taps for a step that is not current', () => {
+    const ev = startEvents('pp', 0);
+    expect(stepEvents(ev, 'tq', 'done', 5)).toEqual([]);
+  });
+});
